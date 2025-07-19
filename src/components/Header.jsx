@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
-import { SearchContext } from '../context/context';
+import React, { useState } from 'react';
+import { useProductContext } from '../context/index.js';
 
 const Header = () => {
-    const { handleSearch } = useContext(SearchContext);
+    const { handleSearch } = useProductContext()
     const [text, setText] = useState('')
 
     const handleSubmitSearch = () => {

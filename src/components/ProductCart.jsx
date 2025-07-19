@@ -1,35 +1,13 @@
 
-import React, { useContext } from 'react';
+import React from 'react';
 import { getImgUrl } from '../utils.js/utility';
-import { CartContext } from '../context/context';
+import { useProductContext } from '../context';
 
 const ProductCart = ({ cartItem }) => {
-    const { productCards, setProductCards, handleDeleteFromCart, setSelectedCarts } = useContext(CartContext);
-
-
-
-
-    const handleQuantity = (type) => {
-        const foundCard = productCards.find(item => item.id === cartItem.id)
-
-        if (type === "add" && foundCard.stock > 0) {
-            // কার্টের মধ্যে ঐ কার্ডের কোয়ান্টিটি পার ক্লিকে ১ করে বাড়ানো হচ্ছে একই সাথে কার্ডলিস্টের মধ্যে ঐ কার্ডের কোয়ান্টিটি ১ করে কমানো হচ্ছে।
-            //implement with updater function:
-           setProductCards(prev => prev.map(item => item.id === cartItem.id ? { ...item, stock: item.stock - 1 } : item));
-           //implement with updater function:
-            setSelectedCarts((prev) => prev.map(item => item.id === cartItem.id ? { ...item, quantity: item.quantity + 1 } : item));
-            
-        }
-        if (type === "substract" && cartItem.quantity > 1) {
-            // কার্টের মধ্যে ঐ কার্ডের কোয়ান্টিটি পার ক্লিকে ১ করে কমানো হচ্ছে একই সাথে কার্ডলিস্টের মধ্যে ঐ কার্ডের কোয়ান্টিটি ১ করে বাড়ানো হচ্ছে।
-            //implement with updater function:
-            setProductCards(prev => prev.map(item => item.id === cartItem.id ? { ...item, stock: item.stock + 1 } : item));
-            //implement with updater function:
-            setSelectedCarts((prev) => prev.map(item => item.id === cartItem.id ? { ...item, quantity: item.quantity - 1 } : item));
-
-        }
-    }
-
+    const { state, handleDeleteFromCart, handleQuantity } = useProductContext();
+    
+    const productInStock = state.productCards.find(p => p.id === cartItem.id);
+    const stock = productInStock ? productInStock.stock : 0;
 
     return (
         <div className="flex items-start space-x-4 pb-4 border-b border-gray-200 mb-4">
@@ -49,14 +27,16 @@ const ProductCart = ({ cartItem }) => {
                 <div className="flex justify-between items-center mt-2">
                     <p className="font-bold">${cartItem.price}</p>
                     <div className="flex items-center space-x-2">
-                        <button className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center"
+                        <button className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center disabled:opacity-50"
                             onClick={() => handleQuantity("substract", cartItem)}
+                            disabled={cartItem.quantity <= 1}
                         >
                             −
                         </button>
                         <span className="text-sm">{cartItem.quantity}</span>
-                        <button className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center"
+                        <button className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center disabled:opacity-50"
                             onClick={() => handleQuantity("add", cartItem)}
+                            disabled={stock <= 0}
                         >
                             +
                         </button>

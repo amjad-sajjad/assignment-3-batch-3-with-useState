@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import OrderSummary from './OrderSummary';
 import ProductCart from './ProductCart';
-import { CartContext } from '../context/context';
+import { useProductContext } from '../context/index.js';
 import NoFound from './NoFound';
 
 const ProductCartList = () => {
-  const { selectedCarts } = useContext(CartContext);
+  const {state} = useProductContext();
 
   return (
     <div className="lg:col-span-1">
@@ -14,7 +14,7 @@ const ProductCartList = () => {
 
         {/* <!-- Cart Item --> */}
         {
-          selectedCarts.length > 0 ? selectedCarts.map((cartItem) => (<ProductCart
+          state.selectedCarts.length > 0 ? state.selectedCarts.map((cartItem) => (<ProductCart
             key={cartItem.id}
             cartItem={cartItem}
           />)): <NoFound textSize="text-xl">Carts</NoFound>

@@ -1,17 +1,17 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { getImgUrl } from '../utils.js/utility';
 import Rating from './Rating';
-import { CartContext } from '../context/context';
+import { useProductContext } from '../context/index.js';
 
 const ProductCard = ({ product }) => {
 
-  const { handleAddToCart, handleDeleteFromCart, selectedCarts } = useContext(CartContext);
+  const { state, handleAddToCart, handleDeleteFromCart } = useProductContext()
 
-  const isInCart = selectedCarts.find(item => item.id === product.id);
+  const isInCart = state.selectedCarts.find(item => item.id === product.id);
   let date
   if (product.date) {
     date = new Date(product.date);
-
+    date = date.toDateString().slice(3)
   }
   return (
     <div className="bg-gray-100 rounded-lg overflow-hidden transition-transform hover:scale-[1.02] duration-300">
@@ -29,7 +29,7 @@ const ProductCard = ({ product }) => {
           <span className="text-xs text-gray-700">({product.stock} pcs left)</span>
         </div>
         <div className='flex justify-between'>
-          <p className="text-xs text-gray-700 ">{date.toDateString().slice(3)}</p>
+          <p className="text-xs text-gray-700 ">{date}</p>
           <p className="font-bold">${product.price} </p>
         </div>
 

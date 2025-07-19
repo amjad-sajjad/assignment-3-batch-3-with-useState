@@ -1,37 +1,22 @@
-import React, { useContext } from 'react';
-import { CartContext } from '../context/context';
+import React from 'react';
+import {  useProductContext } from '../context/index.js';
 
 const OrderSummary = () => {
-    const { selectedCarts, setSelectedCarts, productCards, setProductCards, setInitialProductStock } = useContext(CartContext);
+    const {state, dispatch} = useProductContext()
 
     // Function to handle checkout button click
     const handleCheckout = () => {
-        if (selectedCarts.length > 0) {
-            // Update productCards stock after checkout
-            const updatedProductCards = productCards.map(product => {
-                const cartItem = selectedCarts.find(item => item.id === product.id);
-                if (cartItem) {
-                    // This is where the stock is permanently reduced
-                    console.log(product.stock);
-                    return { ...product, stock: product.stock };
-                }
-                return product;
-            });
-
-            setProductCards(updatedProductCards);
-
-            // Also update the initial stock so that it reflects the new stock in the productCards
-            const updatedInitialStock = updatedProductCards.map(p => ({ id: p.id, stock: p.stock }));
-            setInitialProductStock(updatedInitialStock);
-
-            setSelectedCarts([]);
+        if (state.selectedCarts.length > 0) {
+            dispatch({
+                type:"CHECKOUT_CARTS"
+            })
         }
         else {
             alert("Your cart is empty. Please add items to your cart before proceeding to checkout.");
         }
     }
 
-    const subTotal = selectedCarts.reduce((total, cart) => total + (cart.price * cart.quantity), 0)
+    const subTotal = state.selectedCarts.reduce((total, cart) => total + (cart.price * cart.quantity), 0)
     const discount = subTotal * 0.2;
     const deliveryFee = 15;
     const total = subTotal - discount + deliveryFee;

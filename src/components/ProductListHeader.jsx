@@ -1,9 +1,11 @@
 import React from 'react';
+import { useProductContext } from '../context';
 
-const ProductListHeader = ({ onSortProduct}) => {
+const ProductListHeader = () => {
+  const {handleSortProduct} = useProductContext();
 
     const handleChange = (e) => {
-        onSortProduct(e.target.value);
+        handleSortProduct(e.target.value);
 
     }
     
@@ -14,7 +16,7 @@ const ProductListHeader = ({ onSortProduct}) => {
             <span className="text-sm">Sort by:</span>
             <select className="border rounded-md px-2 py-1 text-sm"
             onChange={handleChange}>
-              <option disabled selected>Please Select An Option</option>
+              <option selected disabled defaultValue ={"Please selet an option"}>Please selet an option</option>
               <option value={"most popular"}>Most Popular</option>
               <option value={"newest"}>Newest</option>
               <option value={"low to high"}>Price: Low to High</option>

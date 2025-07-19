@@ -1,41 +1,16 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import ProductCard from './ProductCard';
-import { CartContext, SearchContext } from '../context/context';
+import {  useProductContext } from '../context';
 import ProductListHeader from './ProductListHeader';
 import NoFound from './NoFound';
 
 
 const ProductCardList = () => {
-  const { productCards, setProductCards } = useContext(CartContext);
-  const { searchText } = useContext(SearchContext);
-
-  //sort functionality:
-  const handleSortProduct = (sortOption) => {
-
-    const sortProducts = [...productCards]
-    if (sortOption.toLowerCase() === "most popular") {
-      setProductCards(sortProducts.sort((a, b) => b.rating - a.rating))
-    }
-    else if (sortOption.toLowerCase() === "low to high") {
-      setProductCards(sortProducts.sort((a, b) => a.price - b.price))
-    }
-    else if (sortOption.toLowerCase() === "high to low") {
-      setProductCards(sortProducts.sort((a, b) => b.price - a.price))
-    }
-    else if (sortOption.toLowerCase() === "newest") {
-      setProductCards(sortProducts.sort((a, b) => new Date(b.date) - new Date(a.date)));
-    }
-  }
-
-  //filter functionality:
-  const filteredProductCards = productCards.filter((product) =>
-    product.name.toLowerCase().includes(searchText.toLowerCase())
-  );
-
+  const { filteredProductCards} = useProductContext();
 
   return (
     <div className="lg:col-span-2">
-      <ProductListHeader onSortProduct={handleSortProduct} />
+      <ProductListHeader />
 
       {/* <!-- Products Grid --> */}
       <div className="product-grid">
